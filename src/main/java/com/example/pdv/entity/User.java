@@ -3,6 +3,8 @@ package com.example.pdv.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -17,4 +19,6 @@ public class User {
     private String name;
     private boolean isEnable;
 
+    @OneToMany(mappedBy = "user")
+    private List<Sale> sales;
 }
