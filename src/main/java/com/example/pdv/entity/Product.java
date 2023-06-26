@@ -1,6 +1,7 @@
 package com.example.pdv.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class Product {
     @Column(length = 20, precision = 20, scale = 2, nullable = false)
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
+    //@Min(1)
     private int quantity;
-
 }

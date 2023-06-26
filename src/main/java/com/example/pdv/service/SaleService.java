@@ -4,14 +4,13 @@ import com.example.pdv.dto.ProductDTO;
 import com.example.pdv.dto.SaleDTO;
 import com.example.pdv.entity.Product;
 import com.example.pdv.entity.Sale;
-import com.example.pdv.entity.SaleItem;
+import com.example.pdv.entity.ItemSale;
 import com.example.pdv.entity.User;
 import com.example.pdv.repository.ProductRepository;
-import com.example.pdv.repository.SaleItemRepository;
+import com.example.pdv.repository.ItemSaleRepository;
 import com.example.pdv.repository.SaleRepository;
 import com.example.pdv.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,45 +25,45 @@ public class SaleService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final SaleRepository saleRepository;
-    private SaleItemRepository saleItemRepository;
+    private final ItemSaleRepository itemSaleRepository;
 
     @Transactional
-    public long save(SaleDTO saleDTO){
+    public long save(SaleDTO sale){
 
-        User user = userRepository.findById(saleDTO.getUserId()).get();
+        User user = userRepository.findById(sale.getUserid()).get();
 
         Sale newSale = new Sale();
         newSale.setUser(user);
         newSale.setDate(LocalDate.now());
-        List<SaleItem> items = getSaleItem(saleDTO.getItems());
+        List<ItemSale> items = getItemSale(sale.getItems());
 
 
         newSale = saleRepository.save(newSale);
 
-        saveSaleItem(items, newSale);
+        saveItemSale(items, newSale);
 
         return newSale.getId();
     }
 
 
-    private void saveSaleItem(List<SaleItem> items, Sale newSale) {
-        for(SaleItem item: items){
+    private void saveItemSale(List<ItemSale> items, Sale newSale) {
+        for (ItemSale item: items){
             item.setSale(newSale);
-            saleItemRepository.save(item);
+            itemSaleRepository.save(item);
         }
     }
 
 
-    public List<SaleItem> getSaleItem(List<ProductDTO> products){
+    public List<ItemSale> getItemSale(List<ProductDTO> products){
 
         return products.stream().map(item -> {
-            Product product = productRepository.getReferenceById(item.getProductId());
+            Product product = productRepository.getReferenceById(item.getProductid());
 
-            SaleItem saleItem = new SaleItem();
-            saleItem.setProduct(product);
-            saleItem.setQuantity(item.getQuantity());
+            ItemSale itemSale = new ItemSale();
+            itemSale.setProduct(product);
+            itemSale.setQuantity(item.getQuantity());
 
-            return saleItem;
+            return itemSale;
         }).collect(Collectors.toList());
     }
 }

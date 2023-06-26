@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "sale")
 @Entity
@@ -28,6 +27,5 @@ public class Sale {
     private User user;
 
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY)
-    private List<SaleItem> items;
-
+    private List<ItemSale> items;
 }
