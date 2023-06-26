@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -25,9 +27,21 @@ public class UserController {
     @PostMapping()
     public ResponseEntity post(@RequestBody User user){
         try {
+            user.setEnable(true);
             return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
         }catch (Exception e){
             return  new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PutMapping()
+    public ResponseEntity put(@RequestBody User user){
+       Optional<User> userToEdit = userRepository.findById(user.getId());
+        if(userToEdit.isPresent()){
+            userRepository.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
