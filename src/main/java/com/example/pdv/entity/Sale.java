@@ -28,6 +28,6 @@ public class Sale {
     private User user;
 
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY)
-    private List<SaleItem> itens;
+    private List<SaleItem> items;
 
 }
