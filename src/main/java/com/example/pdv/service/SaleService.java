@@ -49,6 +49,7 @@ public class SaleService {
 
         return items.stream().map(item -> {
             ProductInfoDTO productInfoDTO = new ProductInfoDTO();
+            productInfoDTO.setId(item.getId());
             productInfoDTO.setDescription(item.getProduct().getDescription());
             productInfoDTO.setQuantity(item.getQuantity());
 

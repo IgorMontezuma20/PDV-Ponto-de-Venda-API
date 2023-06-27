@@ -1,7 +1,9 @@
 package com.example.pdv.controller;
 
+import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.entity.User;
-import com.example.pdv.repository.UserRepository;
+import com.example.pdv.exceptions.NoItemException;
+import com.example.pdv.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +15,22 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public UserController(@Autowired UserRepository userRepository){
-        this.userRepository = userRepository;
+    public UserController(@Autowired UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping()
     public ResponseEntity getAll(){
-        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity post(@RequestBody User user){
         try {
             user.setEnable(true);
-            return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
+            return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
         }catch (Exception e){
             return  new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -36,19 +38,19 @@ public class UserController {
 
     @PutMapping()
     public ResponseEntity put(@RequestBody User user){
-       Optional<User> userToEdit = userRepository.findById(user.getId());
-        if(userToEdit.isPresent()){
-            userRepository.save(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+        }catch (NoItemException e){
+            return new ResponseEntity<>(new ResponseDTO<>(e.getMessage(), user), HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return  new ResponseEntity<>(new ResponseDTO<>(e.getMessage(), null ), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id){
         try {
-            userRepository.deleteById(id);
+            userService.deleteById(id);
             return new ResponseEntity<>("Usuário removido com sucesso!", HttpStatus.OK);
         }catch (Exception e){
             return  new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
