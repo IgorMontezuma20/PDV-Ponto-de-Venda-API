@@ -1,6 +1,8 @@
 package com.example.pdv.controller;
 
+import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.dto.SaleDTO;
+import com.example.pdv.dto.SaleInfoDTO;
 import com.example.pdv.exceptions.InvalidOperationException;
 import com.example.pdv.exceptions.NoItemException;
 import com.example.pdv.service.SaleService;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/sale")
@@ -23,25 +27,27 @@ public class SaleController {
     public ResponseEntity post(@RequestBody SaleDTO saleDTO){
         try {
             long id = saleService.save(saleDTO);
-            return new ResponseEntity<>("Venda realizada com sucesso: " + id, HttpStatus.CREATED);
+            return new ResponseEntity<>(new ResponseDTO<>("Venda realizada com sucesso: ", id)
+                    , HttpStatus.CREATED);
 
         }catch (NoItemException | InvalidOperationException e){
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDTO<>(e.getMessage(), null), HttpStatus.BAD_REQUEST);
         }catch (Exception e){
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseDTO<>(e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     @GetMapping()
     public ResponseEntity getAll(){
-        return new ResponseEntity<>(saleService.findAll(), HttpStatus.OK);
+
+        return new ResponseEntity<>( new ResponseDTO<>("",saleService.findAll()) , HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable long id){
         try {
-            return new ResponseEntity<>(saleService.getById(id), HttpStatus.OK);
+            return new ResponseEntity<>( new ResponseDTO<>("", saleService.getById(id)), HttpStatus.OK);
         }catch (NoItemException | InvalidOperationException e){
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
