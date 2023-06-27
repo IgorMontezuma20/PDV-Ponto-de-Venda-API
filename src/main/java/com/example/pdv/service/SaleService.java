@@ -8,6 +8,8 @@ import com.example.pdv.entity.Product;
 import com.example.pdv.entity.Sale;
 import com.example.pdv.entity.ItemSale;
 import com.example.pdv.entity.User;
+import com.example.pdv.exceptions.InvalidOperationException;
+import com.example.pdv.exceptions.NoItemException;
 import com.example.pdv.repository.ProductRepository;
 import com.example.pdv.repository.ItemSaleRepository;
 import com.example.pdv.repository.SaleRepository;
@@ -91,9 +93,12 @@ public class SaleService {
             itemSale.setQuantity(item.getQuantity());
 
             if (product.getQuantity() == 0){
-                throw new IllegalArgumentException();
+                throw new NoItemException("Produto fora de estoque.");
             } else if (product.getQuantity() < item.getQuantity()) {
-                throw new IllegalArgumentException();
+                throw new InvalidOperationException(
+                        String.format("A quantidade de intens da venda (%s) é maior que a quantidade em estoque (%s)",
+                                item.getQuantity(), product.getQuantity()));
+
             }
 
             int total = product.getQuantity() - item.getQuantity();
