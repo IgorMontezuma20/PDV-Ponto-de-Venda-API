@@ -40,6 +40,11 @@ public class SaleController {
 
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable long id){
-        return new ResponseEntity<>(saleService.getById(id), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(saleService.getById(id), HttpStatus.OK);
+        }catch (NoItemException | InvalidOperationException e){
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
