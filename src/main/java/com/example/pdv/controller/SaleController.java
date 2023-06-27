@@ -32,4 +32,9 @@ public class SaleController {
     public ResponseEntity getAll(){
         return new ResponseEntity<>(saleService.findAll(), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getById(@PathVariable long id){
+        return new ResponseEntity<>(saleService.getById(id), HttpStatus.OK);
+    }
 }
