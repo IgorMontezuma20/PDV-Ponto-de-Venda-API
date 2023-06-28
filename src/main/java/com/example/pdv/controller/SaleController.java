@@ -1,9 +1,6 @@
 package com.example.pdv.controller;
-
 import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.dto.SaleDTO;
-import com.example.pdv.exceptions.InvalidOperationException;
-import com.example.pdv.exceptions.NoItemException;
 import com.example.pdv.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,31 +21,22 @@ public class SaleController {
     @PostMapping()
     public ResponseEntity post(@RequestBody SaleDTO saleDTO){
         try {
-            long id = saleService.save(saleDTO);
-            return new ResponseEntity<>(new ResponseDTO("Venda realizada com sucesso!")
-                    , HttpStatus.CREATED);
-
-        }catch (NoItemException | InvalidOperationException e){
-            return new ResponseEntity<>(new ResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+            saleService.save(saleDTO);
+            return new ResponseEntity<>(new ResponseDTO("Venda realizada com sucesso!"), HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(new ResponseDTO(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @GetMapping()
     public ResponseEntity getAll(){
 
-        return new ResponseEntity<>( saleService.findAll() , HttpStatus.OK);
+        return new ResponseEntity<>(saleService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable long id){
-        try {
-            return new ResponseEntity<>( saleService.getById(id), HttpStatus.OK);
-        }catch (NoItemException | InvalidOperationException e){
-            return new ResponseEntity<>(new ResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
 
+        return new ResponseEntity<>( saleService.getById(id), HttpStatus.OK);
     }
 }
