@@ -1,5 +1,6 @@
 package com.example.pdv.controller;
 
+import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.entity.Product;
 import com.example.pdv.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/product")
 public class ProductController {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductController(@Autowired ProductRepository productRepository){
         this.productRepository = productRepository;
@@ -27,7 +28,7 @@ public class ProductController {
         try {
             return new ResponseEntity<>(productRepository.save(product), HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseDTO(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -36,7 +37,7 @@ public class ProductController {
         try {
             return new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseDTO(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -44,9 +45,9 @@ public class ProductController {
     public ResponseEntity delete(@PathVariable Long id){
         try {
             productRepository.deleteById(id);
-            return new ResponseEntity<>("Produto removido com sucesso!", HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDTO("Produto removido com sucesso!"), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(new ResponseDTO(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

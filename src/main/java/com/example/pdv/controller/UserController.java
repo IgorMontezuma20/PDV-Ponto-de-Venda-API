@@ -5,6 +5,7 @@ import com.example.pdv.entity.User;
 import com.example.pdv.exceptions.NoItemException;
 import com.example.pdv.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,19 +42,23 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
         }catch (NoItemException e){
-            return new ResponseEntity<>(new ResponseDTO<>(e.getMessage(), user), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }catch (Exception e){
-            return  new ResponseEntity<>(new ResponseDTO<>(e.getMessage(), null ), HttpStatus.INTERNAL_SERVER_ERROR);
+            return  new ResponseEntity<>(new ResponseDTO(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id){
-        try {
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@PathVariable long id){
+        try
+        {
             userService.deleteById(id);
-            return new ResponseEntity<>("Usuário removido com sucesso!", HttpStatus.OK);
-        }catch (Exception e){
-            return  new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseDTO("Usuário removido com sucesso!"), HttpStatus.OK);
+        } catch (EmptyResultDataAccessException error){
+            return new ResponseEntity<>(new ResponseDTO("Não foi possível localizar o usuário!"), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception error){
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
