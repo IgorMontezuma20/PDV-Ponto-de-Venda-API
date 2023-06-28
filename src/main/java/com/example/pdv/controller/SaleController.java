@@ -2,6 +2,7 @@ package com.example.pdv.controller;
 import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.dto.SaleDTO;
 import com.example.pdv.service.SaleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class SaleController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@RequestBody SaleDTO saleDTO){
+    public ResponseEntity post(@Valid @RequestBody SaleDTO saleDTO){
         try {
             saleService.save(saleDTO);
             return new ResponseEntity<>(new ResponseDTO("Venda realizada com sucesso!"), HttpStatus.CREATED);

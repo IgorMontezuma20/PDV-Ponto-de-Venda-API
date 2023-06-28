@@ -3,6 +3,7 @@ package com.example.pdv.controller;
 import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.entity.Product;
 import com.example.pdv.repository.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@RequestBody Product product){
+    public ResponseEntity post(@Valid @RequestBody Product product){
         try {
             return new ResponseEntity<>(productRepository.save(product), HttpStatus.CREATED);
         }catch (Exception e){
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping
-    public ResponseEntity put(@RequestBody Product product){
+    public ResponseEntity put(@Valid @RequestBody Product product){
         try {
             return new ResponseEntity<>(productRepository.save(product), HttpStatus.OK);
         }catch (Exception e){
