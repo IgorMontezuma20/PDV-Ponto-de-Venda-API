@@ -1,6 +1,7 @@
 package com.example.pdv.controller;
 
 import com.example.pdv.dto.ResponseDTO;
+import com.example.pdv.dto.UserDTO;
 import com.example.pdv.entity.User;
 import com.example.pdv.exceptions.NoItemException;
 import com.example.pdv.service.UserService;
@@ -29,9 +30,9 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@Valid @RequestBody User user){
+    public ResponseEntity post(@Valid @RequestBody UserDTO user){
         try {
-            user.setEnable(true);
+            user.setEnabled(true);
             return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
         }catch (Exception e){
             return  new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity put(@Valid @RequestBody User user){
+    public ResponseEntity put(@Valid @RequestBody UserDTO user){
         try {
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
         }catch (Exception e){

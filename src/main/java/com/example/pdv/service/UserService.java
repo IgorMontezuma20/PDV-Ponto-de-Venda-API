@@ -26,12 +26,16 @@ public class UserService {
         ).collect(Collectors.toList());
     }
 
-    public UserDTO save(User user){
-        userRepository.save(user);
+    public UserDTO save(UserDTO user){
+        User userToSave = new User();
+        userToSave.setName(user.getName());
+        userToSave.setEnable(user.isEnabled());
+
+        userRepository.save(userToSave);
         return new UserDTO(
-                user.getId(),
-                user.getName(),
-                user.isEnable()
+                userToSave.getId(),
+                userToSave.getName(),
+                userToSave.isEnable()
 
         );
     }
@@ -46,14 +50,19 @@ public class UserService {
         return new UserDTO(user.getId(), user.getName(), user.isEnable());
     }
 
-    public UserDTO update(User user){
-        Optional<User> userToEdit = userRepository.findById(user.getId());
+    public UserDTO update(UserDTO user){
+        User userToSave = new User();
+        userToSave.setName(user.getName());
+        userToSave.setEnable(user.isEnabled());
+        userToSave.setId(user.getId());
+
+        Optional<User> userToEdit = userRepository.findById(userToSave.getId());
         if(!userToEdit.isPresent()){
             throw new NoItemException("Usuário não encontrado.");
         }
 
-        userRepository.save(user);
-        return new UserDTO(user.getId(), user.getName(), user.isEnable());
+        userRepository.save(userToSave);
+        return new UserDTO(userToSave.getId(), userToSave.getName(), userToSave.isEnable());
     }
 
     public void deleteById(long id){
