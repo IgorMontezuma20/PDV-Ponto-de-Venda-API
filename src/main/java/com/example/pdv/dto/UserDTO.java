@@ -1,10 +1,10 @@
 package com.example.pdv.dto;
 
+import com.example.pdv.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +14,6 @@ public class UserDTO {
     private long id;
     private String name;
     private boolean isEnabled;
+
 
 }
