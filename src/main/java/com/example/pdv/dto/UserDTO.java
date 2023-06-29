@@ -1,6 +1,5 @@
 package com.example.pdv.dto;
 
-import com.example.pdv.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,8 @@ public class UserDTO {
 
     private long id;
     private String name;
+    private String userName;
+    private String password;
     private boolean isEnabled;
 
 

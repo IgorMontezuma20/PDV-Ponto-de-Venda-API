@@ -2,8 +2,6 @@ package com.example.pdv.controller;
 
 import com.example.pdv.dto.ResponseDTO;
 import com.example.pdv.dto.UserDTO;
-import com.example.pdv.entity.User;
-import com.example.pdv.exceptions.NoItemException;
 import com.example.pdv.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +9,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
